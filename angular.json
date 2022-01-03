@@ -184,7 +184,13 @@
           "options": {
             "outputPath": "dist/dv-ui/server",
             "main": "server.ts",
-            "tsConfig": "tsconfig.server.json"
+            "tsConfig": "tsconfig.server.json",
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/scss",
+                "src/app/modules"
+              ]
+            }
           },
           "configurations": {
             "production": {
