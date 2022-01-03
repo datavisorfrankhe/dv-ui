@@ -18,48 +18,99 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/dv-ui/browser",
-            "index": "src/index.html",
+            "index": "src/index/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
-            "tsConfig": "tsconfig.app.json",
+            "tsConfig": "src/tsconfig.app.json",
             "aot": true,
             "assets": [
-              "src/favicon.ico",
-              "src/assets"
+              "src/static",
+              "src/assets/favicon.ico",
+              "src/app/modules/uml-essentials/assets",
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "node_modules/ngx-monaco-editor/assets/monaco",
+                "output": "/assets/monaco"
+              }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/index/styles.css",
+              "src/scss/global.scss",
+              "src/scss/global-light.scss",
+              "src/scss/global-noir.scss",
+              "node_modules/prismjs/themes/prism-okaidia.css"
             ],
-            "scripts": []
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/scss",
+                "src/app/modules"
+              ]
+            },
+            "scripts": [
+              "src/static/echarts.boxplot.min.js",
+              "../dv-ui/node_modules/colresizable/colResizable-1.6.min.js",
+              "../dv-ui/node_modules/papaparse/papaparse.js",
+              "../dv-ui/node_modules/marked/lib/marked.js",
+              "node_modules/prismjs/prism.js",
+              "node_modules/prismjs/components/prism-css.min.js",
+              "node_modules/tether/dist/js/tether.min.js"
+            ]
           },
           "configurations": {
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
-                }
-              ],
+            "onprem": {
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
+              "aot": true,
               "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
+              "vendorChunk": true,
+              "buildOptimizer": false,
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.onprem.ts"
+              },
                 {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5mb"
+                  "replace": "src/index/index.html",
+                  "with": "src/index/index.onprem.html"
                 },
                 {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb",
-                  "maximumError": "10kb"
+                  "replace": "src/index/styles.css",
+                  "with": "src/index/styles.onprem.css"
                 }
               ]
+            },
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": true,
+              "buildOptimizer": false,
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.production.ts"
+              }]
+            },
+            "staging": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": true,
+              "buildOptimizer": false,
+              "fileReplacements": [{
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.staging.ts"
+              }]
             }
           }
         },
@@ -84,27 +135,32 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "main": "src/test.ts",
+            "karmaConfig": "karma.conf.js",
             "polyfills": "src/polyfills.ts",
             "tsConfig": "tsconfig.spec.json",
-            "karmaConfig": "karma.conf.js",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
+            "scripts": [
+              "../dv-ui/node_modules/papaparse/papaparse.js"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.css"
             ],
-            "scripts": []
+            "assets": [
+              "src/static",
+              "src/favicon.ico"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "src/scss"
+              ]
+            }
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "tsconfig.app.json",
-              "tsconfig.spec.json",
-              "e2e/tsconfig.json",
-              "tsconfig.server.json"
+              "src/tsconfig.app.json",
+              "src/tsconfig.app.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -136,7 +192,7 @@
               "fileReplacements": [
                 {
                   "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "with": "src/environments/environment.production.ts"
                 }
               ],
               "sourceMap": false,
